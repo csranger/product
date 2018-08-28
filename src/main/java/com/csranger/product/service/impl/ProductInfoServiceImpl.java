@@ -23,4 +23,9 @@ public class ProductInfoServiceImpl implements ProductInfoService {
     public List<ProductInfo> findUpAll() {
         return productInfoDao.findByProductStatus(ProductStatusEnum.UP.getCode());     // 应该传入参数 0，不好使用枚举类
     }
+
+    @Override
+    public List<ProductInfo> findList(List<String> productIdList) {
+        return productInfoDao.findByProductIdIn(productIdList);
+    }
 }

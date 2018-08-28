@@ -12,4 +12,8 @@ public interface ProductInfoService {
      */
     List<ProductInfo> findUpAll();
 
+    /**
+     * 查找：根据一组商品id productId 的list查询商品信息 ProductInfo
+     */
+    List<ProductInfo> findList(List<String> productIdList);
 }
