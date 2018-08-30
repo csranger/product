@@ -1,5 +1,6 @@
 package com.csranger.product.controller;
 
+import com.csranger.product.dto.CartDTO;
 import com.csranger.product.VO.ProductInfoVO;
 import com.csranger.product.VO.ProductVO;
 import com.csranger.product.model.ProductCategory;
@@ -9,14 +10,11 @@ import com.csranger.product.service.ProductCategoryService;
 import com.csranger.product.service.ProductInfoService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @RestController
 @RequestMapping(value = "/product")
@@ -68,7 +66,7 @@ public class ProductController {
 
 
     /**
-     * 查询商品信息：获取商品列表(给订单服务用的)
+     * 查询商品信息：获取商品列表(给订单服务用的，所以没有使用 Result 封装结果)
      * 创建订单需要先根据 商品id 查询商品信息，订单服务传来的参数是：商品id的list
      * 使用 @RequestBody 修饰参数，则必须 @PostMapping
      */
@@ -81,4 +79,9 @@ public class ProductController {
      * 扣库存(给订单服务用的)
      * 创建订单前需要先减少购买商品的库存
      */
+    @PostMapping(value = "/decreaseStock")
+    public void decreaseStock(@RequestBody List<CartDTO> cartDTOList) {
+        productInfoService.decreaseStock(cartDTOList);
+    }
+
 }

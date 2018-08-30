@@ -1,5 +1,6 @@
 package com.csranger.product.service;
 
+import com.csranger.product.dto.CartDTO;
 import com.csranger.product.ProductApplicationTests;
 import com.csranger.product.model.ProductInfo;
 import lombok.extern.slf4j.Slf4j;
@@ -10,8 +11,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.List;
-
-import static org.junit.Assert.*;
 
 
 @Component   // 这种继承 ProductApplicationTests 方法也可，不再每次加上 两个注解：@RunWith(SpringRunner.class) @SpringBootTest
@@ -33,5 +32,11 @@ public class ProductInfoServiceTest extends ProductApplicationTests {
         List<ProductInfo> productInfoList = productInfoService.findList(productIdList);
         Assert.assertTrue(productIdList.size() == 3);
         log.info(productInfoList.toString());
+    }
+
+    @Test
+    public void decreaseStock() {
+        CartDTO cartDTO = new CartDTO("157876323366164068", 5);
+        productInfoService.decreaseStock(Arrays.asList(cartDTO));
     }
 }
