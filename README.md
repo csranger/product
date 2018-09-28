@@ -142,6 +142,36 @@
 ### 创建订单前先查询商品信息实现
 ### 减库存实现
 
+## 改造成多模块 
+### 商品服务供订单服务调用存在的问题
+1. 直接暴露了与数据库对应的实体类
+    - ProductController 类中的 listForOrder 方法直接返回 List<ProductInfo>
+    - ProductInfo 与数据库相对应，这不安全
+2. 订单服务与商品服务有许多重复类，比如CartDTO，ProductInfo 等类
+3. ProductClient 里写了商品服务的一些接口，开发订单服务的可能不熟悉，放在订单服务不合适，应该放在商品服务以供调用，因为这两组服务可能有不同团队负责
+
+### 将订单模块和商品模块都改造成多模块解决上述问题
+1. 商品服务：
+    - product-server 所有业务逻辑                     依赖 product-common
+    - product-client 对外暴露的接口，可供订单服务调用    依赖 product-common
+    - product-common 公用对象，可被外部服务调用，也被内部服务使用
+2. dependencyManagement和dependencies区别：
+    - dependencies:自动引入声明在dependencies里的所有依赖，并默认被所有的子项目继承。如果项目中不写依赖项，则会从父项目
+   继承（属性全部继承）声明在父项目dependencies里的依赖项。
+    - dependencyManagement里只是声明依赖，并不实现引入，因此子项目需要显示的声明需要的依赖。如果不在子项目中声明依赖，
+   是不会从父项目中继承的；只有在子项目中写了该依赖项，并且没有指定具体版本，才会从父项目中继承该项，并且version和scope都读取
+   自父pom;如果子项目中指定了版本号，那么会使用子项目中指定的jar版本。同时dependencyManagement让子项目引用依赖，而不用显示的列
+   出版本号。Maven会沿着父子层次向上走，直到找到一个拥有dependencyManagement元素的项目，然后它就会使用在这个
+   dependencyManagement元素中指定的版本号,实现所有子项目使用的依赖项为同一版本。
+    - dependencyManagement 中的 dependencies 并不影响项目的依赖项；而独立dependencies元素则影响项目的依赖项。只有当外
+   层的dependencies元素中没有指明版本信息时，dependencyManagement 中的 dependencies 元素才起作用。一个是项目依赖，一个是maven
+   项目多模块情况时作依赖管理控制的。
+3. 将原先在 Order 服务里的 ProductClient 放在 Product 服务里
+4. 因为 ProductClient 在 Product 服务里，所以需要将 product 生成 jar 安装到本地 maven 仓库以供调用
+    - mvn -Dmaven.test.skip=true -U clean install
+
+
+
 
 
 

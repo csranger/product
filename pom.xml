@@ -6,7 +6,12 @@
     <groupId>com.csranger</groupId>
     <artifactId>product</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>jar</packaging>
+    <modules>
+        <module>common</module>
+        <module>client</module>
+        <module>server</module>
+    </modules>
+    <packaging>pom</packaging>
 
     <name>product</name>
     <description>Demo project for Spring Boot</description>
@@ -23,43 +28,15 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
         <spring-cloud.version>Finchley.SR1</spring-cloud.version>
+        <product-common.version>0.0.1-SNAPSHOT</product-common.version>
     </properties>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-        </dependency>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-
-        <!--数据库相关：mysql spring-jpa -->
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-        </dependency>
-
-    </dependencies>
-
+    <!-- dependency 和 dependencyManager 之间区别：http://www.cnblogs.com/Eilen/p/6558591.html-->
+    <!--dependencyManagement里只是声明依赖，并不实现引入，因此子项目需要显示的声明需要的依赖。如果不在子项目中声明依赖，
+    是不会从父项目中继承的；只有在子项目中写了该依赖项，并且没有指定具体版本，才会从父项目中继承该项，并且version和scope都读取
+    自父pom;如果子项目中指定了版本号，那么会使用子项目中指定的jar版本。-->
+    <!--方便维护-->
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -69,17 +46,20 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+
+            <dependency>
+                <groupId>com.csranger</groupId>
+                <artifactId>product-common</artifactId>
+                <version>${product-common.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.csranger</groupId>
+                <artifactId>order-common</artifactId>
+                <version>${order-common.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
 
 
 </project>
